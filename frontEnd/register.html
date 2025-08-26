@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #1abc9c;
+            --light-color: #ecf0f1;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #dfe6e9, #b2bec3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-weight: 500;
+            font-size: 24px;
+        }
+        
+        .form-container {
+            padding: 20px 30px 30px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        input.error {
+            border-color: var(--error-color);
+        }
+        
+        input.success {
+            border-color: var(--success-color);
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background: #16a085;
+        }
+        
+        .success-message {
+            display: none;
+            background: var(--success-color);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 38px;
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+            }
+            
+            .form-container {
+                padding: 15px 20px 20px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cadastro de Usuário</h1>
+        </div>
+        
+        <div class="form-container">
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="name">Nome Completo:</label>
+                    <input id="name" type="text" required placeholder="Seu nome completo">
+                    <div class="error-message" id="nome-error">Por favor, insira um nome válido (mínimo 3 caracteres)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input id="email" type="email" required placeholder="seu@email.com">
+                    <div class="error-message" id="email-error">Por favor, insira um email válido</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input id="password" type="password" required placeholder="Mínimo 8 caracteres">
+                    <span class="password-toggle" id="password-toggle">👁️</span>
+                    <div class="error-message" id="password-error">A senha deve ter pelo menos 8 caracteres, incluindo letras e números</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço:</label>
+                    <input id="endereco" type="text" required placeholder="Seu endereço completo">
+                    <div class="error-message" id="endereco-error">Por favor, insira um endereço válido</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone:</label>
+                    <input id="telefone" type="text" required placeholder="(11) 99999-9999">
+                    <div class="error-message" id="telefone-error">Por favor, insira um telefone válido</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cpf">CPF:</label>
+                    <input id="cpf" type="text" required placeholder="000.000.000-00">
+                    <div class="error-message" id="cpf-error">Por favor, insira um CPF válido</div>
+                </div>
+                
+                <button type="submit">Cadastrar</button>
+            </form>
+            
+            <div class="success-message" id="success-message">
+                Cadastro realizado com sucesso!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('register-form');
+            const successMessage = document.getElementById('success-message');
+            const passwordToggle = document.getElementById('password-toggle');
+            const passwordInput = document.getElementById('password');
+            
+            // Formatação do telefone
+            const telefoneInput = document.getElementById('telefone');
+            telefoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length > 10) {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                } else if (value.length > 6) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                } else if (value.length > 2) {
+                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                }
+                e.target.value = value;
+            });
+            
+            // Formatação do CPF
+            const cpfInput = document.getElementById('cpf');
+            cpfInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length > 9) {
+                    value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (value.length > 6) {
+                    value = value.replace(/^(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+                } else if (value.length > 3) {
+                    value = value.replace(/^(\d{3})(\d{0,3})/, '$1.$2');
+                }
+                e.target.value = value;
+            });
+            
+            // Alternar visibilidade da senha
+            passwordToggle.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    passwordToggle.textContent = '🔒';
+                } else {
+                    passwordInput.type = 'password';
+                    passwordToggle.textContent = '👁️';
+                }
+            });
+            
+            // Função de validação de CPF
+            function validarCPF(cpf) {
+                cpf = cpf.replace(/\D/g, '');
+                
+                if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+                    return false;
+                }
+                
+                let soma = 0;
+                for (let i = 0; i < 9; i++) {
+                    soma += parseInt(cpf.charAt(i)) * (10 - i);
+                }
+                
+                let resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                
+                if (resto !== parseInt(cpf.charAt(9))) {
+                    return false;
+                }
+                
+                soma = 0;
+                for (let i = 0; i < 10; i++) {
+                    soma += parseInt(cpf.charAt(i)) * (11 - i);
+                }
+                
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                
+                return resto === parseInt(cpf.charAt(10));
+            }
+            
+            // Validações com regex
+            const validacoes = {
+                name: {
+                    regex: /^[a-zA-ZÀ-ÿ\s]{3,}$/,
+                    mensagem: 'nome-error'
+                },
+                email: {
+                    regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    mensagem: 'email-error'
+                },
+                password: {
+                    regex: /^(?=.*[A-Za-z])(?=.*\d).{8,}$/,
+                    mensagem: 'password-error'
+                },
+                endereco: {
+                    regex: /^.{5,}$/,
+                    mensagem: 'endereco-error'
+                },
+                telefone: {
+                    regex: /^\(\d{2}\)\s\d{4,5}-\d{4}$/,
+                    mensagem: 'telefone-error'
+                },
+                cpf: {
+                    regex: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+                    mensagem: 'cpf-error',
+                    validacaoExtra: validarCPF
+                }
+            };
+            
+            // Adicionar validação em tempo real para cada campo
+            Object.keys(validacoes).forEach(campo => {
+                const input = document.getElementById(campo);
+                const errorElement = document.getElementById(validacoes[campo].mensagem);
+                
+                input.addEventListener('blur', function() {
+                    validarCampo(input, validacoes[campo], errorElement);
+                });
+                
+                input.addEventListener('input', function() {
+                    input.classList.remove('error', 'success');
+                    errorElement.style.display = 'none';
+                });
+            });
+            
+            // Função para validar um campo individual
+            function validarCampo(input, validacao, errorElement) {
+                const valor = input.value.trim();
+                
+                if (!valor) {
+                    input.classList.add('error');
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                
+                if (!validacao.regex.test(valor)) {
+                    input.classList.add('error');
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                
+                if (validacao.validacaoExtra && !validacao.validacaoExtra(valor)) {
+                    input.classList.add('error');
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                
+                input.classList.remove('error');
+                input.classList.add('success');
+                errorElement.style.display = 'none';
+                return true;
+            }
+            
+            // Validação do formulário completo
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                let formValido = true;
+                
+                // Validar todos os campos
+                Object.keys(validacoes).forEach(campo => {
+                    const input = document.getElementById(campo);
+                    const errorElement = document.getElementById(validacoes[campo].mensagem);
+                    
+                    if (!validarCampo(input, validacoes[campo], errorElement)) {
+                        formValido = false;
+                    }
+                });
+                
+                if (formValido) {
+                    
+                    await fetch('http://localhost:3000/api/users/register',{
+
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: document.getElementById('name').value,
+                            email: document.getElementById('email').value,
+                            password: document.getElementById('password').value,
+                            endereco: document.getElementById('endereco').value,
+                            telefone: document.getElementById('telefone').value,
+                            cpf: document.getElementById('cpf').value
+                        })
+                    }).then(response => {
+                        if (response.ok) {
+                            // Redirecionar para a tela de login
+                            window.location.href = 'login.html';
+                            console.log(response);
+                        } else {
+                            // Exibir mensagem de erro
+                            alert('Erro ao cadastrar usuário');
+                        }
+                    });
+                }
+                    
+                    // Remover classes de sucesso dos inputs
+                    Object.keys(validacoes).forEach(campo => {
+                        document.getElementById(campo).classList.remove('success');
+                    });
+                    
+                    
+            });
+        });
+    </script>
+</body>
+</html>
