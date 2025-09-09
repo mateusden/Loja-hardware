@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="logout()"> Sair</button>
+    
+</body>
+<script>
+
+        async function logout(){
+
+            var token = localStorage.getItem("token");
+
+            await fetch("http://localhost:3000/api/users/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then(response => response.json())
+            .then(data => {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+            })
+            .catch(error => {
+                console.error("Erro ao fazer logout:", error);
+            });
+ 
+        }
+
+
+</script>
+</html>

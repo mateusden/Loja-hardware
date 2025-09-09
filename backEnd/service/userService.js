@@ -1,4 +1,5 @@
 const User = require('../model/User');
+const Sessao = require('../model/Sessao');
 
 const createUser = async (user) => {
     const newUser = await User.create(user);
@@ -27,9 +28,11 @@ const login = async (email) => {
     return loggedUser;
 };
 
-const logout = async (user) => {
-    const loggedOutUser = await User.findOne({ where: { email: user.email } });
-    return loggedOutUser;
+const logout = async (token) => {
+   
+    await Sessao.destroy({ where: { token } });
+    
+   return "Logout realizado com sucesso";
 };
 
 const registerUser = async (user) => {

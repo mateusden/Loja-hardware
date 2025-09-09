@@ -138,6 +138,11 @@
             font-weight: 500;
             display: none;
         }
+        .footer-login {
+            margin-top: 5px;
+            display: flex;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -159,6 +164,9 @@
                     <div class="error-message" id="password-error">A senha deve ter pelo menos 8 caracteres, incluindo letras e números</div>
                 </div>
                 <button type="submit" id="submit-btn">Entrar</button>
+                <div class="footer-login">
+                  <p>Não tem uma conta?</p>  <a href="register.html">Criar uma conta</a>
+                </div>
                 <div class="success-message" id="success-message">Login realizado com sucesso!</div>
             </form>
         </div>
@@ -290,12 +298,12 @@
                         
                         // Armazenar token se existir
                         if (data.token) {
-                            localStorage.setItem('authToken', data.token);
+                            localStorage.setItem('token', data.token);
                         }
                         
                         // Redirecionar após breve delay
                         setTimeout(() => {
-                            window.location.href = '/dashboard';
+                            window.location.href = 'index.html';
                         }, 1500);
                     } else {
                         // Tratar erros específicos da API

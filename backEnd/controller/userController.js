@@ -21,13 +21,10 @@ const registerUser = async (req, res) => {
 
     const user = await userService.getUser(req.body);
 
-
     if (user != null) {
       console.log("deu erro");
       return res.status(400).json({ error: "Usuario ja cadastrado" });
-
-    }
-    else {
+    } else {
       console.log("deu certo");
       var hash = await bcrypt.hash(req.body.password, 10);
       req.body.password = hash;
@@ -44,36 +41,45 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await userService.login(email, password);
 
-    await Sessao.update(
-      { invalido: true },
-      { where: { usuarioid: user.id, invalido: false } }
-    );
+    // Invalida sessões anteriores
+    await Sessao.destroy({ where: { usuarioid: user.id, invalido: false } });
+      
 
-    if(bcrypt.compareSync(password, user.password)){
+    console.log(user.password);
+    console.log(password);
+
+    if (bcrypt.compareSync(password, user.password)) {
       user.senha = null;
       const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
       const expiracao = moment().tz('America/Sao_Paulo').add(1, 'hour').toDate();
       await Sessao.create({ usuarioid: user.id, token, expiracao, invalido: false });
       return res.status(200).json({ user, token });
+    } else {
+      return res.status(401).json({ error: 'Credenciais inválidas' });
     }
-    else{
-      return res.status(401).json({ error: 'Credenciais inválidas' });
-    }
-    
 
-   
   } catch (error) {
     res.status(401).json({ error: error.message });
   }
-}
+};
 const logout = async (req, res) => {
   try {
-    const user = await userService.logout(req.body);
-    res.status(200).json(user);
+    // Extrai o token da requisicao
+
+    const token = req.headers.authorization.split(' ')[1];
+    console.log("ção o logout do backend token:" + token);
+
+
+   
+   var resp = await userService.logout(token);
+
+    res.status(200).json(resp);
   } catch (error) {
+    // Caso haja um erro, retorna uma resposta com o status 400 e o erro
     res.status(400).json({ error: error.message });
   }
 }
+/*******  0993f55b-3268-4624-b1d6-f3a41e87ac82  *******/
 const deleteUser = async (req, res) => {
   try {
     const user = await userService.deleteUser(req.body);

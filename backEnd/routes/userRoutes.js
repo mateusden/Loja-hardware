@@ -6,7 +6,7 @@ const userController = require('../controller/userController');
 
 userRoutes.post('/register',userController.registerUser)  
  
-  
+userRoutes.post('/logout',userController.logout)  
 
 
 
