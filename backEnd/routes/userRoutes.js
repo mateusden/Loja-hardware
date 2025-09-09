@@ -3,6 +3,7 @@ const userRoutes = express.Router();
 const userController = require('../controller/userController');
 
 
+
 userRoutes.post('/register',userController.registerUser)  
  
   
@@ -21,14 +22,10 @@ userRoutes.get('/', (req, res) => {
     `);
 });
 
-userRoutes.post('/login', (req, res) => {
- 
+userRoutes.post('/login',userController.login)
 
 
-  return res.send({msg: "logado com sucesso"}).status(200);
- 
 
-})
 userRoutes.delete('/delete', (req, res) => {
 
 

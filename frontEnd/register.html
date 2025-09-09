@@ -5,402 +5,364 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --accent-color: #1abc9c;
-            --light-color: #ecf0f1;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-        }
-        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #dfe6e9, #b2bec3);
-            min-height: 100vh;
+            background-color: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
         
         .container {
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
-            overflow: hidden;
+            padding: 30px;
         }
         
-        .header {
-            background: var(--secondary-color);
-            color: white;
-            padding: 20px;
+        h1 {
             text-align: center;
-        }
-        
-        .header h1 {
-            font-weight: 500;
-            font-size: 24px;
-        }
-        
-        .form-container {
-            padding: 20px 30px 30px 30px;
+            margin-bottom: 30px;
+            color: #333;
         }
         
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
-            color: var(--secondary-color);
-            font-weight: 500;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
         }
         
         input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            transition: all 0.3s;
+            transition: border-color 0.3s;
         }
         
         input:focus {
+            border-color: #4a90e2;
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
         }
         
-        input.error {
-            border-color: var(--error-color);
-        }
-        
-        input.success {
-            border-color: var(--success-color);
-        }
-        
-        .error-message {
-            color: var(--error-color);
+        .error {
+            color: #e74c3c;
             font-size: 14px;
             margin-top: 5px;
             display: none;
         }
         
         button {
-            background: var(--accent-color);
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
             color: white;
             border: none;
-            padding: 14px;
             border-radius: 5px;
-            width: 100%;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s;
-            font-weight: 500;
+            transition: background-color 0.3s;
         }
         
         button:hover {
-            background: #16a085;
+            background-color: #357abD;
         }
         
         .success-message {
-            display: none;
-            background: var(--success-color);
-            color: white;
-            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
             border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .login-link {
             text-align: center;
             margin-top: 20px;
         }
         
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 38px;
-            cursor: pointer;
-            color: var(--secondary-color);
+        .login-link a {
+            color: #4a90e2;
+            text-decoration: none;
         }
         
-        @media (max-width: 600px) {
-            .container {
-                width: 100%;
-            }
-            
-            .form-container {
-                padding: 15px 20px 20px 20px;
-            }
+        .login-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Cadastro de Usuário</h1>
+        <h1>Criar uma conta</h1>
+        
+        <div id="successMessage" class="success-message">
+            Cadastro realizado com sucesso! Redirecionando para login...
         </div>
         
-        <div class="form-container">
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="name">Nome Completo:</label>
-                    <input id="name" type="text" required placeholder="Seu nome completo">
-                    <div class="error-message" id="nome-error">Por favor, insira um nome válido (mínimo 3 caracteres)</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input id="email" type="email" required placeholder="seu@email.com">
-                    <div class="error-message" id="email-error">Por favor, insira um email válido</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Senha:</label>
-                    <input id="password" type="password" required placeholder="Mínimo 8 caracteres">
-                    <span class="password-toggle" id="password-toggle">👁️</span>
-                    <div class="error-message" id="password-error">A senha deve ter pelo menos 8 caracteres, incluindo letras e números</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="endereco">Endereço:</label>
-                    <input id="endereco" type="text" required placeholder="Seu endereço completo">
-                    <div class="error-message" id="endereco-error">Por favor, insira um endereço válido</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="telefone">Telefone:</label>
-                    <input id="telefone" type="text" required placeholder="(11) 99999-9999">
-                    <div class="error-message" id="telefone-error">Por favor, insira um telefone válido</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="cpf">CPF:</label>
-                    <input id="cpf" type="text" required placeholder="000.000.000-00">
-                    <div class="error-message" id="cpf-error">Por favor, insira um CPF válido</div>
-                </div>
-                
-                <button type="submit">Cadastrar</button>
-            </form>
-            
-            <div class="success-message" id="success-message">
-                Cadastro realizado com sucesso!
+        <div id="errorMessage" class="error-message"></div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Nome completo</label>
+                <input type="text" id="name" name="name" required>
+                <div class="error" id="nameError">Nome deve ter entre 2 e 100 caracteres</div>
             </div>
+            
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error" id="emailError">Por favor, insira um e-mail válido</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error" id="passwordError">Senha deve ter pelo menos 6 caracteres</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <input type="text" id="endereco" name="endereco" required>
+                <div class="error" id="enderecoError">Endereço é obrigatório</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefone">Telefone (opcional)</label>
+                <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999">
+                <div class="error" id="telefoneError">Formato de telefone inválido</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00">
+                <div class="error" id="cpfError">CPF inválido</div>
+            </div>
+            
+            <button type="submit">Cadastrar</button>
+        </form>
+        
+        <div class="login-link">
+            Já tem uma conta? <a href="/login">Faça login</a>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('register-form');
-            const successMessage = document.getElementById('success-message');
-            const passwordToggle = document.getElementById('password-toggle');
-            const passwordInput = document.getElementById('password');
-            
-            // Formatação do telefone
-            const telefoneInput = document.getElementById('telefone');
-            telefoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 11) value = value.slice(0, 11);
-                
-                if (value.length > 10) {
-                    value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                } else if (value.length > 6) {
-                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-                } else if (value.length > 2) {
-                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-                }
-                e.target.value = value;
-            });
+            const form = document.getElementById('registerForm');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
             
             // Formatação do CPF
             const cpfInput = document.getElementById('cpf');
             cpfInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 11) value = value.slice(0, 11);
                 
-                if (value.length > 9) {
-                    value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-                } else if (value.length > 6) {
-                    value = value.replace(/^(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
-                } else if (value.length > 3) {
-                    value = value.replace(/^(\d{3})(\d{0,3})/, '$1.$2');
+                if (value.length > 11) {
+                    value = value.slice(0, 11);
                 }
+                
+                if (value.length <= 11) {
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+                    value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+                }
+                
                 e.target.value = value;
             });
             
-            // Alternar visibilidade da senha
-            passwordToggle.addEventListener('click', function() {
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    passwordToggle.textContent = '🔒';
-                } else {
-                    passwordInput.type = 'password';
-                    passwordToggle.textContent = '👁️';
+            // Formatação do telefone
+            const telefoneInput = document.getElementById('telefone');
+            telefoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                
+                if (value.length > 11) {
+                    value = value.slice(0, 11);
                 }
+                
+                if (value.length <= 11) {
+                    if (value.length <= 2) {
+                        value = value.replace(/^(\d{0,2})/, '($1');
+                    } else if (value.length <= 7) {
+                        value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                    } else {
+                        value = value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+                    }
+                }
+                
+                e.target.value = value;
             });
             
-            // Função de validação de CPF
-            function validarCPF(cpf) {
-                cpf = cpf.replace(/\D/g, '');
-                
-                if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
-                    return false;
-                }
-                
-                let soma = 0;
-                for (let i = 0; i < 9; i++) {
-                    soma += parseInt(cpf.charAt(i)) * (10 - i);
-                }
-                
-                let resto = (soma * 10) % 11;
-                if (resto === 10 || resto === 11) resto = 0;
-                
-                if (resto !== parseInt(cpf.charAt(9))) {
-                    return false;
-                }
-                
-                soma = 0;
-                for (let i = 0; i < 10; i++) {
-                    soma += parseInt(cpf.charAt(i)) * (11 - i);
-                }
-                
-                resto = (soma * 10) % 11;
-                if (resto === 10 || resto === 11) resto = 0;
-                
-                return resto === parseInt(cpf.charAt(10));
-            }
-            
-            // Validações com regex
-            const validacoes = {
-                name: {
-                    regex: /^[a-zA-ZÀ-ÿ\s]{3,}$/,
-                    mensagem: 'nome-error'
-                },
-                email: {
-                    regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    mensagem: 'email-error'
-                },
-                password: {
-                    regex: /^(?=.*[A-Za-z])(?=.*\d).{8,}$/,
-                    mensagem: 'password-error'
-                },
-                endereco: {
-                    regex: /^.{5,}$/,
-                    mensagem: 'endereco-error'
-                },
-                telefone: {
-                    regex: /^\(\d{2}\)\s\d{4,5}-\d{4}$/,
-                    mensagem: 'telefone-error'
-                },
-                cpf: {
-                    regex: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
-                    mensagem: 'cpf-error',
-                    validacaoExtra: validarCPF
-                }
-            };
-            
-            // Adicionar validação em tempo real para cada campo
-            Object.keys(validacoes).forEach(campo => {
-                const input = document.getElementById(campo);
-                const errorElement = document.getElementById(validacoes[campo].mensagem);
-                
-                input.addEventListener('blur', function() {
-                    validarCampo(input, validacoes[campo], errorElement);
-                });
-                
-                input.addEventListener('input', function() {
-                    input.classList.remove('error', 'success');
-                    errorElement.style.display = 'none';
-                });
-            });
-            
-            // Função para validar um campo individual
-            function validarCampo(input, validacao, errorElement) {
-                const valor = input.value.trim();
-                
-                if (!valor) {
-                    input.classList.add('error');
-                    errorElement.style.display = 'block';
-                    return false;
-                }
-                
-                if (!validacao.regex.test(valor)) {
-                    input.classList.add('error');
-                    errorElement.style.display = 'block';
-                    return false;
-                }
-                
-                if (validacao.validacaoExtra && !validacao.validacaoExtra(valor)) {
-                    input.classList.add('error');
-                    errorElement.style.display = 'block';
-                    return false;
-                }
-                
-                input.classList.remove('error');
-                input.classList.add('success');
-                errorElement.style.display = 'none';
-                return true;
-            }
-            
-            // Validação do formulário completo
+            // Validação do formulário
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                let formValido = true;
+                // Reset errors
+                hideAllErrors();
+                errorMessage.style.display = 'none';
                 
-                // Validar todos os campos
-                Object.keys(validacoes).forEach(campo => {
-                    const input = document.getElementById(campo);
-                    const errorElement = document.getElementById(validacoes[campo].mensagem);
-                    
-                    if (!validarCampo(input, validacoes[campo], errorElement)) {
-                        formValido = false;
+                // Validação básica dos campos
+                let isValid = true;
+                
+                // Validação do nome
+                const name = document.getElementById('name').value;
+                if (name.length < 2 || name.length > 100) {
+                    showError('nameError');
+                    isValid = false;
+                }
+                
+                // Validação do email
+                const email = document.getElementById('email').value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('emailError');
+                    isValid = false;
+                }
+                
+                // Validação da senha
+                const password = document.getElementById('password').value;
+                if (password.length < 6) {
+                    showError('passwordError');
+                    isValid = false;
+                }
+                
+                // Validação do endereço
+                const endereco = document.getElementById('endereco').value;
+                if (!endereco.trim()) {
+                    showError('enderecoError');
+                    isValid = false;
+                }
+                
+                // Validação do telefone (se preenchido)
+                const telefone = document.getElementById('telefone').value;
+                if (telefone) {
+                    const telefoneRegex = /^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/;
+                    if (!telefoneRegex.test(telefone)) {
+                        showError('telefoneError');
+                        isValid = false;
                     }
-                });
+                }
                 
-                if (formValido) {
-                    
-                    await fetch('http://localhost:3000/api/users/register',{
-
+                // Validação do CPF
+                const cpf = document.getElementById('cpf').value;
+                const cleanCPF = cpf.replace(/\D/g, '');
+                if (cleanCPF.length !== 11 || !validateCPF(cleanCPF)) {
+                    showError('cpfError');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    return;
+                }
+                
+                // Preparar dados para envio
+                const userData = {
+                    name: name,
+                    email: email,
+                    password: password,
+                    endereco: endereco,
+                    telefone: telefone || null,
+                    cpf: cleanCPF // Enviar CPF sem formatação
+                };
+                
+                try {
+                    // Enviar dados via Fetch API
+                    const response = await fetch('http://localhost:3000/api/users/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            name: document.getElementById('name').value,
-                            email: document.getElementById('email').value,
-                            password: document.getElementById('password').value,
-                            endereco: document.getElementById('endereco').value,
-                            telefone: document.getElementById('telefone').value,
-                            cpf: document.getElementById('cpf').value
-                        })
-                    }).then(response => {
-                        if (response.ok) {
-                            // Redirecionar para a tela de login
+                        body: JSON.stringify(userData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        // Sucesso no cadastro
+                        successMessage.style.display = 'block';
+                        form.reset();
+                        
+                        // Redirecionar após 2 segundos
+                        setTimeout(() => {
                             window.location.href = 'login.html';
-                            console.log(response);
-                        } else {
-                            // Exibir mensagem de erro
-                            alert('Erro ao cadastrar usuário');
-                        }
-                    });
+                        }, 2000);
+                    } else {
+                        // Exibir erro retornado pelo servidor
+                        showServerError(data.message || 'Erro no cadastro');
+                    }
+                } catch (error) {
+                    showServerError('Erro de conexão. Tente novamente.');
                 }
-                    
-                    // Remover classes de sucesso dos inputs
-                    Object.keys(validacoes).forEach(campo => {
-                        document.getElementById(campo).classList.remove('success');
-                    });
-                    
-                    
             });
+            
+            function showError(elementId) {
+                document.getElementById(elementId).style.display = 'block';
+            }
+            
+            function hideAllErrors() {
+                const errors = document.querySelectorAll('.error');
+                errors.forEach(error => {
+                    error.style.display = 'none';
+                });
+            }
+            
+            function showServerError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+            
+            // Validação de CPF
+            function validateCPF(cpf) {
+                if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+                
+                let sum = 0;
+                let remainder;
+                
+                for (let i = 1; i <= 9; i++) {
+                    sum += parseInt(cpf.substring(i-1, i)) * (11 - i);
+                }
+                
+                remainder = (sum * 10) % 11;
+                if ((remainder === 10) || (remainder === 11)) remainder = 0;
+                if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+                
+                sum = 0;
+                for (let i = 1; i <= 10; i++) {
+                    sum += parseInt(cpf.substring(i-1, i)) * (12 - i);
+                }
+                
+                remainder = (sum * 10) % 11;
+                if ((remainder === 10) || (remainder === 11)) remainder = 0;
+                if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+                
+                return true;
+            }
         });
     </script>
 </body>
