@@ -47,7 +47,6 @@ const User = sequelize.define('User', {
     cpf: {
         type: DataTypes.STRING(14),
         allowNull: false,
-        unique: true,
     }
 }, {
     timestamps: true,

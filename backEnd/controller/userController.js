@@ -19,21 +19,48 @@ const registerUser = async (req, res) => {
   try {
     console.log(req.body);
 
-    const user = await userService.getUser(req.body);
+    // Verifica se usuário já existe pelo EMAIL apenas
+    const existingUser = await userService.getUser(req.body);
 
-    if (user != null) {
-      console.log("deu erro");
-      return res.status(400).json({ error: "Usuario ja cadastrado" });
-    } else {
-      console.log("deu certo");
-      var hash = await bcrypt.hash(req.body.password, 10);
-      req.body.password = hash;
-      const newuser = await userService.registerUser(req.body);
-      res.status(200).json(newuser);
+    if (existingUser != null) {
+      console.log("Usuário já cadastrado");
+      return res.status(400).json({ error: "E-mail já cadastrado" });
     }
 
+    // Hash da senha e criação do usuário
+    var hash = await bcrypt.hash(req.body.password, 10);
+    req.body.password = hash;
+    const newuser = await userService.registerUser(req.body);
+    
+    res.status(201).json({ 
+      success: true, 
+      message: "Usuário criado com sucesso",
+      user: {
+        id: newuser.id,
+        name: newuser.name,
+        email: newuser.email
+      }
+    });
+
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Erro no registro:", error);
+    
+    // Tratamento específico para erro de constraint única do Sequelize (apenas email)
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      // Agora só verifica email, CPF pode se repetir
+      if (error.errors[0].path === 'email') {
+        return res.status(400).json({ error: 'E-mail já cadastrado' });
+      }
+    }
+
+    // Outros erros do Sequelize
+    if (error.name === 'SequelizeValidationError') {
+      const messages = error.errors.map(err => err.message);
+      return res.status(400).json({ error: messages.join(', ') });
+    }
+
+    // Erro genérico
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
 const login = async (req, res) => {
