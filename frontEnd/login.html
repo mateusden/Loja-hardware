@@ -142,6 +142,13 @@
             margin-top: 5px;
             display: flex;
             padding: 10px;
+            text-decoration: none;
+        }
+        .footer-login a {
+            text-decoration: none;
+            color: #6e8efb;
+            margin-left: 5px;
+            font-weight: 550;
         }
     </style>
 </head>
@@ -165,7 +172,7 @@
                 </div>
                 <button type="submit" id="submit-btn">Entrar</button>
                 <div class="footer-login">
-                  <p>Não tem uma conta?</p>  <a href="register.html">Criar uma conta</a>
+                  <p>Não tem uma conta? </p>  <a href="register.html"> Criar uma conta</a>
                 </div>
                 <div class="success-message" id="success-message">Login realizado com sucesso!</div>
             </form>
@@ -291,6 +298,8 @@
                     });
                     
                     const data = await response.json();
+                    console.log(data)
+                    
                     
                     if (response.ok) {
                         // Login bem-sucedido
@@ -299,11 +308,16 @@
                         // Armazenar token se existir
                         if (data.token) {
                             localStorage.setItem('token', data.token);
+                            localStorage.setItem('user', data.user.name);
+                            localStorage.setItem('userId', data.user.id);
+                            localStorage.setItem('name', data.user.name);
+                            localStorage.setItem('email', data.user.email);
+                            localStorage.setItem('telefone', data.user.telefone);
                         }
                         
                         // Redirecionar após breve delay
                         setTimeout(() => {
-                            window.location.href = 'index.html';
+                            window.location.href = './index.html';
                         }, 1500);
                     } else {
                         // Tratar erros específicos da API
