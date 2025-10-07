@@ -47,6 +47,11 @@ const User = sequelize.define('User', {
     cpf: {
         type: DataTypes.STRING(14),
         allowNull: false,
+    },
+    role: {
+        type: DataTypes.ENUM('admin', 'user'),
+        defaultValue: 'user', 
+        allowNull: false
     }
 }, {
     timestamps: true,
