@@ -1,21 +1,26 @@
-
 const productService = require('../service/productService');
+const uploadService = require('../service/uploadService');
 
 
 
 async function addProduct(req, res) {
-    
-    try{
-        
-        const result = await productService.addProduct(req.body);
-        res.status(200).json(result);
-    } catch(error){
-        
-        console.error("Erro no registro:", error);
-        res.status(400).json({ error: error.message });
+
+    console.log('=== DEBUG controller ===');
+    console.log('Headers:', req.headers);
+    console.log('Files:', req.files);
+    console.log('Body:', req.body);
+    console.log('=== FIM DEBUG ===');
+
+    try {
+        const productData = req.body;
+        const product = await productService.createProduct(productData);
+        await uploadService.handleProductImageUpload(product.id, req.files);
+        res.status(201).json(product);
+    } catch (error) {
+        console.error('Erro ao adicionar produto:', error);
+        res.status(500).json({ error: 'Erro ao adicionar produto' });
     }
-    
 }
-module.exports = {
-    addProduct 
-};
+
+
+module.exports = { addProduct };

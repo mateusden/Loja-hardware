@@ -1,17 +1,14 @@
-const Product = require('../model/Product');
+// services/productService.js
+const product = require('../model/product');
 
+class ProductService {
+    async createProduct(productData) {
+        // Remove campos desnecessários que podem vir do frontend
+        const { id, data_criacao, data_atualizacao, ...cleanData } = productData;
 
-async function addProduct(productData) {
-
-    try{
-        console.log(productData + "Chegou na Service")
-        const product = await Product.create(productData);
-        return product
-    }catch{
-        throw new Error("Erro ao adicionar produto");
-        
+        return await product.create(cleanData);
     }
+
 }
-module.exports = {
-    addProduct
-}
+
+module.exports = new ProductService();
