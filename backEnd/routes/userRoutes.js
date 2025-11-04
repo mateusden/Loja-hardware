@@ -1,16 +1,12 @@
-const express = require('express');
+const express = require("express");
 const userRoutes = express.Router();
-const userController = require('../controller/userController');
+const userController = require("../controller/userController");
 
+userRoutes.post("/register", userController.registerUser);
 
+userRoutes.post("/logout", userController.logout);
 
-userRoutes.post('/register',userController.registerUser)  
- 
-userRoutes.post('/logout',userController.logout)  
-
-
-
-userRoutes.get('/', (req, res) => {
+userRoutes.get("/", (req, res) => {
   res.send(` 
 
     <div style="display: flex;justify-content: center;align-items: center;height: 100vh">
@@ -22,14 +18,17 @@ userRoutes.get('/', (req, res) => {
     `);
 });
 
-userRoutes.post('/login',userController.login)
+userRoutes.delete("/delete", userController.deleteUser);
 
+userRoutes.post("/login", userController.login);
 
+userRoutes.get("/allusers", userController.getallUsers);
 
-userRoutes.delete('/delete', (req, res) => {
+userRoutes.put("/update", userController.updateUserController);
 
+userRoutes.get("/seek", userController.seekUserByCpf);
 
-  return res.send({msg: "perfil deletado com sucesso"}).status(200);
-})
+userRoutes.get("/search", userController.searchUserByFeatName);
+
 
 module.exports = userRoutes;

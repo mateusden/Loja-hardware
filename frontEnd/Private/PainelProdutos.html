@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Produtos</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+            --bg-color: #f5f7fb;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --sidebar-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --border-color: #dee2e6;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #8fa1f0;
+            --secondary-color: #9b6bd4;
+            --bg-color: #1a1d23;
+            --text-color: #e9ecef;
+            --card-bg: #2d3035;
+            --sidebar-bg: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --border-color: #495057;
+            --light-color: #495057;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar {
+            background: var(--sidebar-bg);
+            color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-card .label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .bg-primary-light {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .bg-success-light {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        
+        .bg-warning-light {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .bg-info-light {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--info-color);
+        }
+        
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .table {
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            border-bottom: 2px solid var(--border-color);
+            font-weight: 600;
+        }
+        
+        .table td {
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            margin: 0 2px;
+            border-radius: 5px;
+            border: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .btn-view {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--info-color);
+        }
+        
+        .btn-edit {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .btn-delete {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .btn-view:hover, .btn-edit:hover, .btn-delete:hover {
+            transform: scale(1.1);
+        }
+        
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 12px;
+            color: #6c757d;
+        }
+        
+        .search-box input {
+            padding-left: 40px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .search-box input:focus {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .page-title {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .badge-category {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .price-tag {
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        
+        .stock-badge {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .stock-high {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stock-medium {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .stock-low {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .form-control, .form-select, .form-textarea {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .form-control:focus, .form-select:focus, .form-textarea:focus {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .pagination .page-link {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .pagination .page-link:hover {
+            background-color: var(--light-color);
+            border-color: var(--border-color);
+        }
+        
+        .dropdown-menu {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .dropdown-item {
+            color: var(--text-color);
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: var(--text-color);
+        }
+        
+        .settings-panel {
+            position: fixed;
+            top: 50%;
+            right: -300px;
+            transform: translateY(-50%);
+            width: 300px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px 0 0 10px;
+            padding: 20px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1050;
+        }
+        
+        .settings-panel.open {
+            right: 0;
+        }
+        
+        .settings-toggle {
+            position: absolute;
+            left: -40px;
+            top: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            padding: 10px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .color-option.active {
+            border-color: var(--text-color);
+            transform: scale(1.1);
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1060;
+            min-width: 300px;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1070;
+            display: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .file-upload.dragover {
+            border-color: var(--success-color);
+            background: rgba(40, 167, 69, 0.05);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-icon {
+            font-size: 36px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+            text-align: left;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 5px;
+        }
+        
+        .file-item .remove-file {
+            color: var(--danger-color);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin: 5px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .tab-content {
+            margin-top: 20px;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .nav-tabs .nav-link:not(.active):hover {
+            background-color: var(--light-color);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <button class="settings-toggle" onclick="toggleSettings()">
+            <i class="bi bi-palette"></i>
+        </button>
+        <h5 class="mb-4"><i class="bi bi-sliders"></i> Configurações</h5>
+        
+        <div class="mb-4">
+            <label class="form-label fw-bold">Tema</label>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary flex-fill" onclick="setTheme('light')">
+                    <i class="bi bi-sun"></i> Claro
+                </button>
+                <button class="btn btn-outline-primary flex-fill" onclick="setTheme('dark')">
+                    <i class="bi bi-moon"></i> Escuro
+                </button>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label fw-bold">Cores Primárias</label>
+            <div class="d-flex flex-wrap justify-content-center">
+                <div class="color-option active" style="background-color: #667eea;" onclick="setPrimaryColor('#667eea')" title="Azul"></div>
+                <div class="color-option" style="background-color: #e53e3e;" onclick="setPrimaryColor('#e53e3e')" title="Vermelho"></div>
+                <div class="color-option" style="background-color: #38a169;" onclick="setPrimaryColor('#38a169')" title="Verde"></div>
+                <div class="color-option" style="background-color: #d69e2e;" onclick="setPrimaryColor('#d69e2e')" title="Amarelo"></div>
+                <div class="color-option" style="background-color: #3182ce;" onclick="setPrimaryColor('#3182ce')" title="Azul Claro"></div>
+                <div class="color-option" style="background-color: #805ad5;" onclick="setPrimaryColor('#805ad5')" title="Roxo"></div>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label fw-bold">Itens por Página</label>
+            <select class="form-select" id="itemsPerPage" onchange="updateItemsPerPage()">
+                <option value="5">5 itens</option>
+                <option value="10" selected>10 itens</option>
+                <option value="20">20 itens</option>
+                <option value="50">50 itens</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold">Ordenação</label>
+            <select class="form-select" id="sortBy" onchange="applySorting()">
+                <option value="name">Nome A-Z</option>
+                <option value="name_desc">Nome Z-A</option>
+                <option value="price_high">Preço (Maior)</option>
+                <option value="price_low">Preço (Menor)</option>
+                <option value="stock_high">Estoque (Maior)</option>
+                <option value="stock_low">Estoque (Menor)</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Exportar Dados</label>
+            <div class="d-grid gap-2">
+                <button class="btn btn-outline-success btn-sm" onclick="exportToCSV()">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> CSV
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="exportToJSON()">
+                    <i class="bi bi-code-slash"></i> JSON
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Area -->
+    <div class="notification" id="notificationArea"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="d-flex flex-column p-3">
+                    <div class="text-center mb-4 mt-3">
+                        <div class="product-image mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            <i class="bi bi-cpu"></i>
+                        </div>
+                        <h5>Hardware Store</h5>
+                        <p class="text-muted small">Painel Administrativo</p>
+                    </div>
+                    
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="Usuario()">
+                                <i class="bi bi-people"></i> Usuários
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active">
+                                <i class="bi bi-box-seam"></i> Produtos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-graph-up"></i> Estatísticas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="toggleSettings()">
+                                <i class="bi bi-palette"></i> Aparência
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="dropdown mt-auto border-top pt-3">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="product-image me-2">A</div>
+                            <div>
+                                <strong>Administrador</strong>
+                                <div class="small">Super Admin</div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleSettings()"><i class="bi bi-palette"></i> Aparência</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="page-title mb-1">Gerenciamento de Produtos</h2>
+                        <p class="text-muted mb-0">Gerencie todos os produtos da sua loja de hardware</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary me-2" onclick="toggleSettings()" title="Configurações">
+                            <i class="bi bi-sliders"></i>
+                        </button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="bi bi-plus-circle"></i> Adicionar Produto
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Abas de Navegação -->
+                <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab">
+                            <i class="bi bi-list-ul"></i> Lista de Produtos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#add" type="button" role="tab">
+                            <i class="bi bi-plus-square"></i> Cadastro Rápido
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Conteúdo das Abas -->
+                <div class="tab-content" id="productTabsContent">
+                    <!-- Aba: Lista de Produtos -->
+                    <div class="tab-pane fade show active" id="list" role="tabpanel">
+                        <!-- Statistics Cards -->
+                        <div class="stats-grid">
+                            <div class="card stat-card bg-primary-light">
+                                <i class="bi bi-box-seam"></i>
+                                <div class="number" id="totalProducts">0</div>
+                                <div class="label">Total de Produtos</div>
+                            </div>
+                            <div class="card stat-card bg-success-light">
+                                <i class="bi bi-check-circle"></i>
+                                <div class="number" id="activeProducts">0</div>
+                                <div class="label">Produtos Ativos</div>
+                            </div>
+                            <div class="card stat-card bg-warning-light">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <div class="number" id="lowStockProducts">0</div>
+                                <div class="label">Estoque Baixo</div>
+                            </div>
+                            <div class="card stat-card bg-info-light">
+                                <i class="bi bi-currency-dollar"></i>
+                                <div class="number" id="totalValue">R$ 0</div>
+                                <div class="label">Valor em Estoque</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Search and Filters -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="search-box">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar produtos por nome, descrição ou marca...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterCategory">
+                                    <option value="">Todas as categorias</option>
+                                    <option value="Processadores">Processadores</option>
+                                    <option value="Placas de Vídeo">Placas de Vídeo</option>
+                                    <option value="Memória RAM">Memória RAM</option>
+                                    <option value="Armazenamento">Armazenamento</option>
+                                    <option value="Placas-mãe">Placas-mãe</option>
+                                    <option value="Fontes">Fontes</option>
+                                    <option value="Gabinetes">Gabinetes</option>
+                                    <option value="Coolers">Coolers</option>
+                                    <option value="Periféricos">Periféricos</option>
+                                    <option value="Monitores">Monitores</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-secondary flex-fill" id="clearFilters">
+                                        <i class="bi bi-arrow-clockwise"></i> Limpar
+                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="bi bi-download"></i> Exportar
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" onclick="exportToCSV()"><i class="bi bi-file-earmark-spreadsheet"></i> CSV</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportToJSON()"><i class="bi bi-code-slash"></i> JSON</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Products Table -->
+                        <div class="table-container mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-list-ul"></i> Lista de Produtos
+                                    <span class="badge bg-primary ms-2" id="productsCount">0</span>
+                                </h5>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2 small text-muted">Ordenar por:</span>
+                                    <select class="form-select form-select-sm w-auto" id="tableSort" onchange="applySorting()">
+                                        <option value="name">Nome A-Z</option>
+                                        <option value="name_desc">Nome Z-A</option>
+                                        <option value="price_high">Preço ↑</option>
+                                        <option value="price_low">Preço ↓</option>
+                                        <option value="stock_high">Estoque ↑</option>
+                                        <option value="stock_low">Estoque ↓</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="productsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Produto</th>
+                                            <th>Categoria</th>
+                                            <th>Preço</th>
+                                            <th>Estoque</th>
+                                            <th>Marca</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productsTableBody">
+                                        <!-- Products will be loaded here dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="text-muted small">
+                                    Mostrando <span id="showingStart">0</span> - <span id="showingEnd">0</span> de <span id="totalCount">0</span> produtos
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center mb-0" id="pagination">
+                                        <!-- Pagination will be generated here -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Aba: Cadastro Rápido -->
+                    <div class="tab-pane fade" id="add" role="tabpanel">
+                        <div class="table-container">
+                            <h5 class="mb-4"><i class="bi bi-plus-square"></i> Cadastro Rápido de Produto</h5>
+                            
+                            <form id="quickProductForm" enctype="multipart/form-data">
+                                <div id="quickMessage" class="alert" style="display: none;"></div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="quickNome" class="form-label required">Nome do Produto</label>
+                                            <input type="text" class="form-control" id="quickNome" name="nome" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="quickCategoria" class="form-label required">Categoria</label>
+                                            <select class="form-select" id="quickCategoria" name="categoria" required>
+                                                <option value="">Selecione uma categoria</option>
+                                                <option value="Processadores">Processadores</option>
+                                                <option value="Placas de Vídeo">Placas de Vídeo</option>
+                                                <option value="Memória RAM">Memória RAM</option>
+                                                <option value="Armazenamento">Armazenamento</option>
+                                                <option value="Placas-mãe">Placas-mãe</option>
+                                                <option value="Fontes">Fontes</option>
+                                                <option value="Gabinetes">Gabinetes</option>
+                                                <option value="Coolers">Coolers</option>
+                                                <option value="Periféricos">Periféricos</option>
+                                                <option value="Monitores">Monitores</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="quickPreco" class="form-label required">Preço (R$)</label>
+                                            <input type="number" class="form-control" id="quickPreco" name="preco" step="0.01" min="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="quickEstoque" class="form-label required">Estoque</label>
+                                            <input type="number" class="form-control" id="quickEstoque" name="estoque" min="0" required value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="quickMarca" class="form-label">Marca</label>
+                                            <input type="text" class="form-control" id="quickMarca" name="marca">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="quickDescricao" class="form-label">Descrição</label>
+                                    <textarea class="form-control form-textarea" id="quickDescricao" name="descricao" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="quickCondicao" class="form-label">Condição</label>
+                                            <select class="form-select" id="quickCondicao" name="condicao">
+                                                <option value="novo">Novo</option>
+                                                <option value="usado">Usado</option>
+                                                <option value="recondicionado">Recondicionado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="quickTags" class="form-label">Tags</label>
+                                            <input type="text" class="form-control" id="quickTags" name="tags" placeholder="Separadas por vírgula">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label required">Imagem Principal</label>
+                                    <div class="file-upload" id="quickMainImageUpload">
+                                        <div class="upload-icon">📷</div>
+                                        <p>Clique para selecionar ou arraste a imagem principal</p>
+                                        <input type="file" id="quickImagemPrincipal" name="imagem_principal" class="file-input" accept="image/*" required>
+                                    </div>
+                                    <div class="file-list" id="quickMainImageList"></div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">Imagens Adicionais</label>
+                                    <div class="file-upload" id="quickAdditionalImagesUpload">
+                                        <div class="upload-icon">🖼️</div>
+                                        <p>Clique para selecionar ou arraste imagens adicionais</p>
+                                        <input type="file" id="quickImagensAdicionais" name="imagens_adicionais" class="file-input" accept="image/*" multiple>
+                                    </div>
+                                    <div class="file-list" id="quickAdditionalImagesList"></div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-check-circle"></i> Cadastrar Produto
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">
+                        <i class="bi bi-plus-circle"></i> Adicionar Novo Produto
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="modalNome" class="form-label required">Nome do Produto</label>
+                                    <input type="text" class="form-control" id="modalNome" name="nome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="modalCategoria" class="form-label required">Categoria</label>
+                                    <select class="form-select" id="modalCategoria" name="categoria" required>
+                                        <option value="">Selecione uma categoria</option>
+                                        <option value="Processadores">Processadores</option>
+                                        <option value="Placas de Vídeo">Placas de Vídeo</option>
+                                        <option value="Memória RAM">Memória RAM</option>
+                                        <option value="Armazenamento">Armazenamento</option>
+                                        <option value="Placas-mãe">Placas-mãe</option>
+                                        <option value="Fontes">Fontes</option>
+                                        <option value="Gabinetes">Gabinetes</option>
+                                        <option value="Coolers">Coolers</option>
+                                        <option value="Periféricos">Periféricos</option>
+                                        <option value="Monitores">Monitores</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="modalDescricao" class="form-label">Descrição</label>
+                            <textarea class="form-control form-textarea" id="modalDescricao" name="descricao" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="modalPreco" class="form-label required">Preço (R$)</label>
+                                    <input type="number" class="form-control" id="modalPreco" name="preco" step="0.01" min="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="modalEstoque" class="form-label required">Estoque</label>
+                                    <input type="number" class="form-control" id="modalEstoque" name="estoque" min="0" required value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="modalMarca" class="form-label">Marca</label>
+                                    <input type="text" class="form-control" id="modalMarca" name="marca">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="modalPeso" class="form-label">Peso (kg)</label>
+                                    <input type="number" class="form-control" id="modalPeso" name="peso" step="0.01" min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="modalCondicao" class="form-label">Condição</label>
+                                    <select class="form-select" id="modalCondicao" name="condicao">
+                                        <option value="novo">Novo</option>
+                                        <option value="usado">Usado</option>
+                                        <option value="recondicionado">Recondicionado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="modalDimensoes" class="form-label">Dimensões (L x A x P)</label>
+                            <input type="text" class="form-control" id="modalDimensoes" name="dimensoes">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="modalTags" class="form-label">Tags</label>
+                            <input type="text" class="form-control" id="modalTags" name="tags" placeholder="Separadas por vírgula">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="modalSku" class="form-label">SKU</label>
+                            <input type="text" class="form-control" id="modalSku" name="sku" placeholder="Deixe em branco para gerar automaticamente">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label required">Imagem Principal</label>
+                            <div class="file-upload" id="modalMainImageUpload">
+                                <div class="upload-icon">📷</div>
+                                <p>Clique para selecionar ou arraste a imagem principal</p>
+                                <input type="file" id="modalImagemPrincipal" name="imagem_principal" class="file-input" accept="image/*" required>
+                            </div>
+                            <div class="file-list" id="modalMainImageList"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Imagens Adicionais</label>
+                            <div class="file-upload" id="modalAdditionalImagesUpload">
+                                <div class="upload-icon">🖼️</div>
+                                <p>Clique para selecionar ou arraste imagens adicionais</p>
+                                <input type="file" id="modalImagensAdicionais" name="imagens_adicionais" class="file-input" accept="image/*" multiple>
+                            </div>
+                            <div class="file-list" id="modalAdditionalImagesList"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveProductBtn">
+                        <i class="bi bi-check-circle"></i> Salvar Produto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">
+                        <i class="bi bi-pencil-square"></i> Editar Produto
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <input type="hidden" id="editProductId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editNome" class="form-label required">Nome do Produto</label>
+                                    <input type="text" class="form-control" id="editNome" name="nome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editCategoria" class="form-label required">Categoria</label>
+                                    <select class="form-select" id="editCategoria" name="categoria" required>
+                                        <option value="">Selecione uma categoria</option>
+                                        <option value="Processadores">Processadores</option>
+                                        <option value="Placas de Vídeo">Placas de Vídeo</option>
+                                        <option value="Memória RAM">Memória RAM</option>
+                                        <option value="Armazenamento">Armazenamento</option>
+                                        <option value="Placas-mãe">Placas-mãe</option>
+                                        <option value="Fontes">Fontes</option>
+                                        <option value="Gabinetes">Gabinetes</option>
+                                        <option value="Coolers">Coolers</option>
+                                        <option value="Periféricos">Periféricos</option>
+                                        <option value="Monitores">Monitores</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editDescricao" class="form-label">Descrição</label>
+                            <textarea class="form-control form-textarea" id="editDescricao" name="descricao" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="editPreco" class="form-label required">Preço (R$)</label>
+                                    <input type="number" class="form-control" id="editPreco" name="preco" step="0.01" min="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="editEstoque" class="form-label required">Estoque</label>
+                                    <input type="number" class="form-control" id="editEstoque" name="estoque" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="editMarca" class="form-label">Marca</label>
+                                    <input type="text" class="form-control" id="editMarca" name="marca">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editPeso" class="form-label">Peso (kg)</label>
+                                    <input type="number" class="form-control" id="editPeso" name="peso" step="0.01" min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editCondicao" class="form-label">Condição</label>
+                                    <select class="form-select" id="editCondicao" name="condicao">
+                                        <option value="novo">Novo</option>
+                                        <option value="usado">Usado</option>
+                                        <option value="recondicionado">Recondicionado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editDimensoes" class="form-label">Dimensões (L x A x P)</label>
+                            <input type="text" class="form-control" id="editDimensoes" name="dimensoes">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editTags" class="form-label">Tags</label>
+                            <input type="text" class="form-control" id="editTags" name="tags" placeholder="Separadas por vírgula">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editSku" class="form-label">SKU</label>
+                            <input type="text" class="form-control" id="editSku" name="sku">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Imagem Principal</label>
+                            <div class="file-upload" id="editMainImageUpload">
+                                <div class="upload-icon">📷</div>
+                                <p>Clique para selecionar ou arraste uma nova imagem principal</p>
+                                <input type="file" id="editImagemPrincipal" name="imagem_principal" class="file-input" accept="image/*">
+                            </div>
+                            <div class="file-list" id="editMainImageList"></div>
+                            <div id="editCurrentImage" class="mt-2"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="updateProductBtn">
+                        <i class="bi bi-check-circle"></i> Atualizar Produto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Product Modal -->
+    <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewProductModalLabel">
+                        <i class="bi bi-eye"></i> Detalhes do Produto
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="viewProductImage" class="text-center mb-4">
+                                <div class="product-image mx-auto" style="width: 200px; height: 200px; font-size: 3rem;">
+                                    <i class="bi bi-image"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h3 id="viewProductName" class="mb-3"></h3>
+                            <div class="mb-3">
+                                <span class="badge-category bg-primary" id="viewProductCategory"></span>
+                                <span class="badge ms-2" id="viewProductCondition"></span>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="price-tag" id="viewProductPrice"></h4>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Estoque:</strong> 
+                                <span class="stock-badge" id="viewProductStock"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Marca:</strong> <span id="viewProductBrand"></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>SKU:</strong> <code id="viewProductSku"></code>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Descrição</h5>
+                            <p id="viewProductDescription" class="text-muted"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Especificações</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Peso:</strong> <span id="viewProductWeight"></span></li>
+                                <li><strong>Dimensões:</strong> <span id="viewProductDimensions"></span></li>
+                                <li><strong>Tags:</strong> <span id="viewProductTags"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Imagens Adicionais</h5>
+                        <div id="viewAdditionalImages" class="image-preview-container">
+                            <!-- Additional images will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteProductModalLabel">
+                        <i class="bi bi-exclamation-triangle"></i> Confirmar Exclusão
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-trash display-4 text-danger"></i>
+                    </div>
+                    <p>Tem certeza que deseja excluir o produto <strong id="deleteProductName"></strong>?</p>
+                    <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="bi bi-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Configurações globais
+        let products = [];
+        let currentPage = 1;
+        let productsPerPage = 10;
+        let currentTheme = 'light';
+        let primaryColor = '#667eea';
+        let currentSort = 'name';
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            loadProducts();
+            setupEventListeners();
+            setupFileUploads();
+        });
+
+        function Usuario(){
+            window.location.href = "painelEletronico.html";
+        }
+
+        // Carregar configurações salvas
+        function loadSettings() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedColor = localStorage.getItem('primaryColor') || '#667eea';
+            const savedItemsPerPage = localStorage.getItem('itemsPerPage') || '10';
+            const savedSort = localStorage.getItem('sortBy') || 'name';
+            
+            setTheme(savedTheme);
+            setPrimaryColor(savedColor, false);
+            
+            productsPerPage = parseInt(savedItemsPerPage);
+            document.getElementById('itemsPerPage').value = savedItemsPerPage;
+            
+            currentSort = savedSort;
+            document.getElementById('sortBy').value = savedSort;
+            document.getElementById('tableSort').value = savedSort;
+        }
+
+        // Configurar tema
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            showNotification(`Tema ${theme === 'dark' ? 'escuro' : 'claro'} ativado`, 'success');
+        }
+
+        // Configurar cor primária
+        function setPrimaryColor(color, showNotification = true) {
+            primaryColor = color;
+            document.documentElement.style.setProperty('--primary-color', color);
+            
+            // Atualizar gradientes
+            const shades = generateColorShades(color);
+            document.documentElement.style.setProperty('--secondary-color', shades.dark);
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (showNotification) {
+                showNotification('Cor primária alterada', 'success');
+            }
+            
+            localStorage.setItem('primaryColor', color);
+        }
+
+        // Gerar tons de cor
+        function generateColorShades(hex) {
+            return {
+                light: hex,
+                dark: adjustColor(hex, -40)
+            };
+        }
+
+        function adjustColor(hex, amount) {
+            return '#' + hex.replace(/^#/, '').replace(/../g, color =>
+                ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
+            );
+        }
+
+        // Alternar painel de configurações
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('open');
+        }
+
+        // Atualizar itens por página
+        function updateItemsPerPage() {
+            productsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+            localStorage.setItem('itemsPerPage', productsPerPage);
+            currentPage = 1;
+            renderProducts();
+            showNotification(`Mostrando ${productsPerPage} itens por página`, 'info');
+        }
+
+        // Aplicar ordenação
+        function applySorting() {
+            currentSort = document.getElementById('tableSort').value;
+            localStorage.setItem('sortBy', currentSort);
+            renderProducts();
+            showNotification(`Ordenação aplicada`, 'info');
+        }
+
+        // Mostrar notificação
+        function showNotification(message, type = 'info') {
+            const notificationArea = document.getElementById('notificationArea');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            notificationArea.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 4000);
+        }
+
+        // Mostrar/ocultar loading
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', filterProducts);
+            document.getElementById('filterCategory').addEventListener('change', filterProducts);
+            document.getElementById('clearFilters').addEventListener('click', clearAllFilters);
+            document.getElementById('saveProductBtn').addEventListener('click', saveProduct);
+            document.getElementById('updateProductBtn').addEventListener('click', updateProduct);
+            document.getElementById('confirmDeleteBtn').addEventListener('click', deleteProduct);
+            
+            // Formulário de cadastro rápido
+            document.getElementById('quickProductForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveQuickProduct();
+            });
+        }
+
+        // Configurar upload de arquivos
+        function setupFileUploads() {
+            // Configuração para todos os elementos de upload
+            const uploadElements = [
+                { container: 'quickMainImageUpload', input: 'quickImagemPrincipal', list: 'quickMainImageList' },
+                { container: 'quickAdditionalImagesUpload', input: 'quickImagensAdicionais', list: 'quickAdditionalImagesList' },
+                { container: 'modalMainImageUpload', input: 'modalImagemPrincipal', list: 'modalMainImageList' },
+                { container: 'modalAdditionalImagesUpload', input: 'modalImagensAdicionais', list: 'modalAdditionalImagesList' },
+                { container: 'editMainImageUpload', input: 'editImagemPrincipal', list: 'editMainImageList' }
+            ];
+            
+            uploadElements.forEach(upload => {
+                const container = document.getElementById(upload.container);
+                const input = document.getElementById(upload.input);
+                const list = document.getElementById(upload.list);
+                
+                if (container && input) {
+                    // Clique para selecionar arquivos
+                    container.addEventListener('click', () => input.click());
+                    
+                    // Drag and drop
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                        container.addEventListener(eventName, preventDefaults, false);
+                    });
+                    
+                    ['dragenter', 'dragover'].forEach(eventName => {
+                        container.addEventListener(eventName, () => container.classList.add('dragover'), false);
+                    });
+                    
+                    ['dragleave', 'drop'].forEach(eventName => {
+                        container.addEventListener(eventName, () => container.classList.remove('dragover'), false);
+                    });
+                    
+                    container.addEventListener('drop', (e) => {
+                        const dt = e.dataTransfer;
+                        const files = dt.files;
+                        input.files = files;
+                        updateFileList(input, list);
+                    });
+                    
+                    // Atualizar lista quando arquivos forem selecionados
+                    input.addEventListener('change', () => updateFileList(input, list));
+                }
+            });
+        }
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function updateFileList(input, list) {
+            list.innerHTML = '';
+            if (input.files.length > 0) {
+                for (let file of input.files) {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span>${file.name}</span>
+                        <span class="remove-file" onclick="removeFile('${input.id}', '${file.name}')">✕</span>
+                    `;
+                    list.appendChild(fileItem);
+                }
+            }
+        }
+
+        // Função para remover arquivos
+        window.removeFile = function(inputId, filename) {
+            const input = document.getElementById(inputId);
+            const dt = new DataTransfer();
+            for (let file of input.files) {
+                if (file.name !== filename) {
+                    dt.items.add(file);
+                }
+            }
+            input.files = dt.files;
+            
+            // Atualizar a lista correspondente
+            const listId = inputId.replace('Imagem', 'Image').replace('Principal', 'Main').replace('Adicionais', 'Additional') + 'List';
+            const list = document.getElementById(listId);
+            if (list) {
+                updateFileList(input, list);
+            }
+        }
+
+        // Carregar produtos da API
+        async function loadProducts() {
+            showLoading(true);
+            try {
+                const response = await fetch('http://localhost:3000/api/products/allProducts');
+                if (!response.ok) throw new Error('Erro ao carregar produtos');
+                
+                const result = await response.json();
+                products = result.products || result;
+                console.log('Produtos carregados:', products);
+                
+                renderProducts();
+                updateStatistics();
+                showNotification('Produtos carregados com sucesso', 'success');
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showNotification('Erro ao carregar produtos', 'danger');
+                // Dados de exemplo para demonstração
+                products = getSampleProducts();
+                renderProducts();
+                updateStatistics();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Renderizar produtos na tabela
+        function renderProducts() {
+            const filteredProducts = getFilteredProducts();
+            const sortedProducts = sortProducts(filteredProducts);
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = sortedProducts.slice(startIndex, endIndex);
+            
+            const productsTableBody = document.getElementById('productsTableBody');
+            productsTableBody.innerHTML = '';
+            
+            if (productsToShow.length === 0) {
+                productsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <i class="bi bi-box-seam display-4 text-muted"></i>
+                            <p class="mt-2 text-muted">Nenhum produto encontrado</p>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                <i class="bi bi-plus-circle"></i> Adicionar Primeiro Produto
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                productsToShow.forEach(product => {
+                    const row = document.createElement('tr');
+                    const firstLetter = product.nome ? product.nome.charAt(0).toUpperCase() : 'P';
+                    const stockClass = getStockClass(product.estoque);
+                    
+                    row.innerHTML = `
+                        <td><span class="badge bg-secondary">#${product.id}</span></td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="product-image me-2">${firstLetter}</div>
+                                <div>
+                                    <div class="fw-semibold">${product.nome}</div>
+                                    <small class="text-muted">${product.marca || 'Sem marca'}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-category bg-primary">${product.categoria}</span>
+                        </td>
+                        <td class="price-tag">R$ ${parseFloat(product.preco).toFixed(2)}</td>
+                        <td>
+                            <span class="stock-badge ${stockClass}">${product.estoque} unidades</span>
+                        </td>
+                        <td>${product.marca || '-'}</td>
+                        <td>
+                            <span class="badge bg-success">Ativo</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="action-btn btn-view" onclick="viewProduct(${product.id})" title="Visualizar">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editProduct(${product.id})" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="confirmDeleteProduct(${product.id})" title="Excluir">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    productsTableBody.appendChild(row);
+                });
+            }
+            
+            updatePagination(filteredProducts.length);
+            updateCounters(filteredProducts.length, startIndex, endIndex);
+        }
+
+        // Determinar classe de estoque
+        function getStockClass(stock) {
+            if (stock > 20) return 'stock-high';
+            if (stock > 5) return 'stock-medium';
+            return 'stock-low';
+        }
+
+        // Ordenar produtos
+        function sortProducts(productsList) {
+            const sorted = [...productsList];
+            switch (currentSort) {
+                case 'name':
+                    return sorted.sort((a, b) => a.nome.localeCompare(b.nome));
+                case 'name_desc':
+                    return sorted.sort((a, b) => b.nome.localeCompare(a.nome));
+                case 'price_high':
+                    return sorted.sort((a, b) => parseFloat(b.preco) - parseFloat(a.preco));
+                case 'price_low':
+                    return sorted.sort((a, b) => parseFloat(a.preco) - parseFloat(b.preco));
+                case 'stock_high':
+                    return sorted.sort((a, b) => parseInt(b.estoque) - parseInt(a.estoque));
+                case 'stock_low':
+                    return sorted.sort((a, b) => parseInt(a.estoque) - parseInt(b.estoque));
+                default:
+                    return sorted;
+            }
+        }
+
+        // Atualizar contadores
+        function updateCounters(total, start, end) {
+            document.getElementById('productsCount').textContent = total;
+            document.getElementById('showingStart').textContent = start + 1;
+            document.getElementById('showingEnd').textContent = Math.min(end, total);
+            document.getElementById('totalCount').textContent = total;
+        }
+
+        // Atualizar paginação
+        function updatePagination(totalProducts) {
+            const totalPages = Math.ceil(totalProducts / productsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Botão anterior
+            const prevLi = createPaginationItem('Anterior', currentPage - 1, currentPage === 1, 'bi-chevron-left');
+            pagination.appendChild(prevLi);
+            
+            // Números das páginas
+            for (let i = 1; i <= totalPages; i++) {
+                const li = createPaginationItem(i, i, i === currentPage);
+                pagination.appendChild(li);
+            }
+            
+            // Botão próximo
+            const nextLi = createPaginationItem('Próxima', currentPage + 1, currentPage === totalPages, 'bi-chevron-right');
+            pagination.appendChild(nextLi);
+        }
+
+        function createPaginationItem(text, page, disabled, icon = null) {
+            const li = document.createElement('li');
+            li.className = `page-item ${disabled ? 'disabled' : ''} ${text === currentPage ? 'active' : ''}`;
+            
+            const link = document.createElement('a');
+            link.className = 'page-link';
+            link.href = '#';
+            link.innerHTML = icon ? `<i class="bi ${icon}"></i>` : text;
+            
+            if (!disabled && text !== currentPage) {
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    changePage(page);
+                };
+            }
+            
+            li.appendChild(link);
+            return li;
+        }
+
+        // Mudar página
+        function changePage(page) {
+            const filteredProducts = getFilteredProducts();
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Filtrar produtos
+        function getFilteredProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('filterCategory').value;
+            
+            return products.filter(product => {
+                const matchesSearch = 
+                    (product.nome && product.nome.toLowerCase().includes(searchTerm)) ||
+                    (product.descricao && product.descricao.toLowerCase().includes(searchTerm)) ||
+                    (product.marca && product.marca.toLowerCase().includes(searchTerm));
+                
+                const matchesCategory = !categoryFilter || product.categoria === categoryFilter;
+                
+                return matchesSearch && matchesCategory;
+            });
+        }
+
+        // Aplicar filtros
+        function filterProducts() {
+            currentPage = 1;
+            renderProducts();
+        }
+
+        // Limpar todos os filtros
+        function clearAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterCategory').value = '';
+            currentPage = 1;
+            renderProducts();
+            showNotification('Filtros limpos', 'info');
+        }
+
+        // Atualizar estatísticas
+        function updateStatistics() {
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('activeProducts').textContent = products.length;
+            
+            const lowStockCount = products.filter(p => p.estoque <= 5).length;
+            document.getElementById('lowStockProducts').textContent = lowStockCount;
+            
+            const totalValue = products.reduce((sum, product) => {
+                return sum + (parseFloat(product.preco) * parseInt(product.estoque));
+            }, 0);
+            document.getElementById('totalValue').textContent = `R$ ${totalValue.toFixed(2)}`;
+        }
+
+        // Visualizar produto
+        function viewProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Produto não encontrado', 'warning');
+                return;
+            }
+            
+            document.getElementById('viewProductName').textContent = product.nome;
+            document.getElementById('viewProductCategory').textContent = product.categoria;
+            document.getElementById('viewProductCondition').textContent = product.condicao === 'novo' ? 'Novo' : product.condicao === 'usado' ? 'Usado' : 'Recondicionado';
+            document.getElementById('viewProductPrice').textContent = `R$ ${parseFloat(product.preco).toFixed(2)}`;
+            document.getElementById('viewProductStock').textContent = `${product.estoque} unidades`;
+            document.getElementById('viewProductStock').className = `stock-badge ${getStockClass(product.estoque)}`;
+            document.getElementById('viewProductBrand').textContent = product.marca || 'Não especificada';
+            document.getElementById('viewProductSku').textContent = product.sku || 'Não especificado';
+            document.getElementById('viewProductDescription').textContent = product.descricao || 'Sem descrição';
+            document.getElementById('viewProductWeight').textContent = product.peso ? `${product.peso} kg` : 'Não especificado';
+            document.getElementById('viewProductDimensions').textContent = product.dimensoes || 'Não especificado';
+            document.getElementById('viewProductTags').textContent = product.tags || 'Nenhuma';
+            
+            // Limpar imagens anteriores
+            document.getElementById('viewProductImage').innerHTML = `
+                <div class="product-image mx-auto" style="width: 200px; height: 200px; font-size: 3rem;">
+                    <i class="bi bi-image"></i>
+                </div>
+            `;
+            
+            document.getElementById('viewAdditionalImages').innerHTML = '';
+            
+            const modal = new bootstrap.Modal(document.getElementById('viewProductModal'));
+            modal.show();
+        }
+
+        // Editar produto
+        function editProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Produto não encontrado', 'warning');
+                return;
+            }
+            
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editNome').value = product.nome;
+            document.getElementById('editCategoria').value = product.categoria;
+            document.getElementById('editDescricao').value = product.descricao || '';
+            document.getElementById('editPreco').value = product.preco;
+            document.getElementById('editEstoque').value = product.estoque;
+            document.getElementById('editMarca').value = product.marca || '';
+            document.getElementById('editPeso').value = product.peso || '';
+            document.getElementById('editCondicao').value = product.condicao || 'novo';
+            document.getElementById('editDimensoes').value = product.dimensoes || '';
+            document.getElementById('editTags').value = product.tags || '';
+            document.getElementById('editSku').value = product.sku || '';
+            
+            // Limpar lista de arquivos
+            document.getElementById('editMainImageList').innerHTML = '';
+            document.getElementById('editCurrentImage').innerHTML = '';
+            
+            const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+            modal.show();
+        }
+
+        // Atualizar produto
+        async function updateProduct() {
+            const productId = parseInt(document.getElementById('editProductId').value);
+            const modalElement = document.getElementById('editProductModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            
+            const updateData = {
+                id: productId,
+                nome: document.getElementById('editNome').value,
+                categoria: document.getElementById('editCategoria').value,
+                descricao: document.getElementById('editDescricao').value,
+                preco: parseFloat(document.getElementById('editPreco').value),
+                estoque: parseInt(document.getElementById('editEstoque').value),
+                marca: document.getElementById('editMarca').value,
+                peso: document.getElementById('editPeso').value ? parseFloat(document.getElementById('editPeso').value) : null,
+                condicao: document.getElementById('editCondicao').value,
+                dimensoes: document.getElementById('editDimensoes').value,
+                tags: document.getElementById('editTags').value,
+                sku: document.getElementById('editSku').value
+            };
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/update`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Update local data
+                    const updatedProductIndex = products.findIndex(p => p.id === productId);
+                    if (updatedProductIndex !== -1) {
+                        products[updatedProductIndex] = { ...products[updatedProductIndex], ...updateData };
+                    }
+                    
+                    renderProducts();
+                    modal.hide();
+                    showNotification('Produto atualizado com sucesso!', 'success');
+                } else {
+                    throw new Error(result.message || 'Erro ao atualizar produto');
+                }
+            } catch (error) {
+                console.error('Error updating product:', error);
+                showNotification('Erro ao atualizar produto: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Confirmar exclusão de produto
+        function confirmDeleteProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Produto não encontrado', 'warning');
+                return;
+            }
+            
+            document.getElementById('deleteProductName').textContent = product.nome;
+            document.getElementById('confirmDeleteBtn').setAttribute('data-product-id', productId);
+            
+            const modal = new bootstrap.Modal(document.getElementById('deleteProductModal'));
+            modal.show();
+        }
+
+        // Excluir produto
+        async function deleteProduct() {
+            const productId = parseInt(document.getElementById('confirmDeleteBtn').getAttribute('data-product-id'));
+            const modalElement = document.getElementById('deleteProductModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/delete`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: productId })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Remove from local data
+                    products = products.filter(p => p.id !== productId);
+                    
+                    renderProducts();
+                    updateStatistics();
+                    modal.hide();
+                    showNotification('Produto excluído com sucesso!', 'success');
+                } else {
+                    throw new Error(result.message || 'Erro ao excluir produto');
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                showNotification('Erro ao excluir produto: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Salvar novo produto (modal)
+        async function saveProduct() {
+            const modalElement = document.getElementById('addProductModal');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            const form = document.getElementById('addProductForm');
+            const formData = new FormData(form);
+            
+            showLoading(true);
+            try {
+                const response = await fetch('http://localhost:3000/api/products/addProduct', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const newProduct = await response.json();
+                    
+                    // Add to local data
+                    products.push(newProduct.product || newProduct);
+                    
+                    renderProducts();
+                    updateStatistics();
+                    form.reset();
+                    document.getElementById('modalMainImageList').innerHTML = '';
+                    document.getElementById('modalAdditionalImagesList').innerHTML = '';
+                    modal.hide();
+                    showNotification('Produto cadastrado com sucesso!', 'success');
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Erro ao cadastrar produto');
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showNotification('Erro ao cadastrar produto: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Salvar produto rápido (aba de cadastro rápido)
+        async function saveQuickProduct() {
+            const form = document.getElementById('quickProductForm');
+            const messageDiv = document.getElementById('quickMessage');
+            const formData = new FormData(form);
+            
+            // Validações básicas
+            if (!formData.get('nome') || !formData.get('categoria') || !formData.get('preco') || !formData.get('estoque')) {
+                messageDiv.className = 'alert alert-warning';
+                messageDiv.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            if (!formData.get('imagem_principal')) {
+                messageDiv.className = 'alert alert-warning';
+                messageDiv.textContent = 'Por favor, selecione uma imagem principal.';
+                messageDiv.style.display = 'block';
+                return;
+            }
+            
+            showLoading(true);
+            try {
+                const response = await fetch('http://localhost:3000/api/products/addProduct', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const newProduct = await response.json();
+                    
+                    // Add to local data
+                    products.push(newProduct.product || newProduct);
+                    
+                    renderProducts();
+                    updateStatistics();
+                    form.reset();
+                    document.getElementById('quickMainImageList').innerHTML = '';
+                    document.getElementById('quickAdditionalImagesList').innerHTML = '';
+                    
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = 'Produto cadastrado com sucesso!';
+                    messageDiv.style.display = 'block';
+                    
+                    // Mudar para a aba de lista após cadastro
+                    document.getElementById('list-tab').click();
+                    
+                    showNotification('Produto cadastrado com sucesso!', 'success');
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Erro ao cadastrar produto');
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                messageDiv.className = 'alert alert-danger';
+                messageDiv.textContent = 'Erro ao cadastrar produto: ' + error.message;
+                messageDiv.style.display = 'block';
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Exportar dados
+        function exportToCSV() {
+            const filteredProducts = getFilteredProducts();
+            const headers = ['ID', 'Nome', 'Categoria', 'Preço', 'Estoque', 'Marca', 'Condição', 'SKU'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredProducts.map(product => [
+                    product.id,
+                    `"${product.nome}"`,
+                    `"${product.categoria}"`,
+                    parseFloat(product.preco).toFixed(2),
+                    product.estoque,
+                    `"${product.marca || ''}"`,
+                    product.condicao,
+                    `"${product.sku || ''}"`
+                ].join(','))
+            ].join('\n');
+            
+            downloadFile(csvContent, 'produtos.csv', 'text/csv');
+            showNotification('Dados exportados para CSV', 'success');
+        }
+
+        function exportToJSON() {
+            const filteredProducts = getFilteredProducts();
+            const jsonContent = JSON.stringify(filteredProducts, null, 2);
+            downloadFile(jsonContent, 'produtos.json', 'application/json');
+            showNotification('Dados exportados para JSON', 'success');
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Dados de exemplo para demonstração
+        function getSampleProducts() {
+            return [
+                {
+                    id: 1,
+                    nome: 'Processador Intel Core i9-13900K',
+                    descricao: 'Processador Intel Core i9 de 13ª geração com 24 núcleos e 32 threads',
+                    preco: 2899.99,
+                    estoque: 15,
+                    categoria: 'Processadores',
+                    marca: 'Intel',
+                    peso: 0.5,
+                    condicao: 'novo',
+                    dimensoes: '45.0 x 34.0 x 12.0 mm',
+                    tags: 'processador, intel, core i9, gaming',
+                    sku: 'INT-I9-13900K',
+                    ativo: true
+                },
+                {
+                    id: 2,
+                    nome: 'Placa de Vídeo RTX 4080',
+                    descricao: 'Placa de vídeo NVIDIA GeForce RTX 4080 com 16GB GDDR6X',
+                    preco: 4599.99,
+                    estoque: 8,
+                    categoria: 'Placas de Vídeo',
+                    marca: 'NVIDIA',
+                    peso: 2.1,
+                    condicao: 'novo',
+                    dimensoes: '300 x 120 x 60 mm',
+                    tags: 'placa de video, nvidia, rtx, gaming',
+                    sku: 'NVD-RTX-4080',
+                    ativo: true
+                },
+                {
+                    id: 3,
+                    nome: 'Memória RAM Corsair 32GB',
+                    descricao: 'Kit de memória RAM Corsair Vengeance RGB 32GB (2x16GB) DDR5 5600MHz',
+                    preco: 899.99,
+                    estoque: 25,
+                    categoria: 'Memória RAM',
+                    marca: 'Corsair',
+                    peso: 0.2,
+                    condicao: 'novo',
+                    dimensoes: '135 x 40 x 8 mm',
+                    tags: 'memoria, ram, corsair, ddr5',
+                    sku: 'COR-RAM-32G-D5',
+                    ativo: true
+                },
+                {
+                    id: 4,
+                    nome: 'SSD Samsung 2TB NVMe',
+                    descricao: 'SSD Samsung 980 Pro 2TB M.2 NVMe com velocidades de até 7000MB/s',
+                    preco: 1299.99,
+                    estoque: 3,
+                    categoria: 'Armazenamento',
+                    marca: 'Samsung',
+                    peso: 0.1,
+                    condicao: 'novo',
+                    dimensoes: '80 x 22 x 2.5 mm',
+                    tags: 'ssd, nvme, samsung, armazenamento',
+                    sku: 'SAM-SSD-2TB-NV',
+                    ativo: true
+                }
+            ];
+        }
+    </script>
+</body>
+</html>
